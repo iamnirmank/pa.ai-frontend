@@ -1,7 +1,7 @@
 import axios,{AxiosInstance} from 'axios';
 
 const axiosInstance: AxiosInstance = axios.create({
-    baseURL: "http://localhost:8000/api/",
+    baseURL: "https://paai.azurewebsites.net/api/",
 });
 
 export default axiosInstance;

@@ -27,12 +27,13 @@ const DocumentManager: React.FC = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
   const [editError, setEditError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     axiosInstance.get('chatmate/api/document/')
       .then(response => setDocuments(response.data))
       .catch(error => console.error("Error fetching documents:", error));
-  }, [isEditing]);
+  }, [isEditing, loading]);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
@@ -65,6 +66,7 @@ const DocumentManager: React.FC = () => {
         setUrl('');
         setFileOrUrl('file');
         setIsUploading(false);
+        setLoading(!loading);
       })
       .catch(error => {
         setUploadError("Error uploading document.");
