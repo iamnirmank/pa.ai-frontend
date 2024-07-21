@@ -4,6 +4,7 @@ import FileUploader from "../file-uploader";
 import { Input } from "../input";
 import UploadImagePreview from "../upload-image-preview";
 import { ChatHandler } from "./chat.interface";
+import axiosInstance from "@/app/helper/axiosInstance";
 
 export default function ChatInput(
   props: Pick<
@@ -48,7 +49,18 @@ export default function ChatInput(
       if (props.multiModal && file.type.startsWith("image/")) {
         return await handleUploadImageFile(file);
       }
-      props.onFileUpload?.(file);
+
+      const formData = new FormData();
+      formData.append("title", file.name);
+      formData.append("file", file);
+
+      const response = await axiosInstance.post('chatmate/api/document/upload_file/', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        }
+      });
+
+      props.onFileUpload?.(response.data);
     } catch (error: any) {
       props.onFileError?.(error.message);
     }

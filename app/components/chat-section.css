@@ -1,0 +1,38 @@
+body {
+    margin: 0;
+    font-family: 'Helvetica Neue', sans-serif;
+    background-color: #FFFFFF;
+  }
+  
+  .bg-gray-100 {
+    background-color: #f7fafc;
+  }
+  
+  .bg-white {
+    background-color: #FFFFFF;
+  }
+  
+  .shadow-lg {
+    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+  }
+  
+  .rounded-lg {
+    border-radius: 0.5rem;
+  }
+  
+  .chat-section {
+    transition: margin-left 0.3s, width 0.3s;
+    position: relative;
+  }
+  
+  .sidebar {
+    background-color: #1877F2;
+    padding: 1rem;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+    overflow-y: auto;
+  }
+  
+  .toggle-sidebar-button {
+    cursor: pointer;
+  }
+  

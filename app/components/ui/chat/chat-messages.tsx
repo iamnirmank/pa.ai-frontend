@@ -5,12 +5,17 @@ import ChatActions from "./chat-actions";
 import ChatMessage from "./chat-message";
 import { ChatHandler } from "./chat.interface";
 
-export default function ChatMessages(
-  props: Pick<ChatHandler, "messages" | "isLoading" | "reload" | "stop">,
-) {
+export default function ChatMessages({
+  messages,
+  isLoading,
+  reload,
+  stop,
+  setIsChatEdit,
+  isChatEdit,
+}: Pick<ChatHandler, "messages" | "isLoading" | "reload" | "stop" | "setIsChatEdit" | "isChatEdit">) {
   const scrollableChatContainerRef = useRef<HTMLDivElement>(null);
-  const messageLength = props.messages.length;
-  const lastMessage = props.messages[messageLength - 1];
+  const messageLength = messages.length;
+  const lastMessage = messages[messageLength - 1];
 
   const scrollToBottom = () => {
     if (scrollableChatContainerRef.current) {
@@ -19,16 +24,10 @@ export default function ChatMessages(
     }
   };
 
-  const isLastMessageFromAssistant =
-    messageLength > 0 && lastMessage?.role !== "user";
-  const showReload =
-    props.reload && !props.isLoading && isLastMessageFromAssistant;
-  const showStop = props.stop && props.isLoading;
-
-  // `isPending` indicate
-  // that stream response is not yet received from the server,
-  // so we show a loading indicator to give a better UX.
-  const isPending = props.isLoading && !isLastMessageFromAssistant;
+  const isLastMessageFromAssistant = messageLength > 0 && lastMessage?.role !== "user";
+  const showReload = reload && !isLoading && isLastMessageFromAssistant;
+  const showStop = stop && isLoading;
+  const isPending = isLoading && !isLastMessageFromAssistant;
 
   useEffect(() => {
     scrollToBottom();
@@ -40,8 +39,13 @@ export default function ChatMessages(
         className="flex h-[50vh] flex-col gap-5 divide-y overflow-y-auto pb-4"
         ref={scrollableChatContainerRef}
       >
-        {props.messages.map((m) => (
-          <ChatMessage key={m.id} {...m} />
+        {messages.map((m) => (
+          <ChatMessage 
+            key={m.id} 
+            chatMessage={m} 
+            setIsChatEdit={setIsChatEdit as any} 
+            isChatEdit={isChatEdit as boolean} 
+          />
         ))}
         {isPending && (
           <div className="flex justify-center items-center pt-10">
@@ -51,8 +55,8 @@ export default function ChatMessages(
       </div>
       <div className="flex justify-end py-4">
         <ChatActions
-          reload={props.reload}
-          stop={props.stop}
+          reload={reload}
+          stop={stop}
           showReload={showReload}
           showStop={showStop}
         />

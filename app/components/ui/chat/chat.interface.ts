@@ -11,6 +11,8 @@ export interface ChatHandler {
     },
   ) => void;
   handleInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  setIsChatEdit?: (isChatEdit: boolean) => void;
+  isChatEdit?: boolean;
   reload?: () => void;
   stop?: () => void;
   onFileUpload?: (file: File) => Promise<void>;
