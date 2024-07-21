@@ -8,7 +8,7 @@
     "format": "prettier --ignore-unknown --cache --check .",
     "format:write": "prettier --ignore-unknown --write .",
     "dev": "next dev",
-    "build": "next build && rm -rf ./.next/cache",
+    "build": "next build && rm -rf ./.next/cache && rm -rf node_modules",
     "start": "next start",
     "lint": "next lint"
   },
