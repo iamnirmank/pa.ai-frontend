@@ -1,14 +1,16 @@
 {
   "name": "nextjs-llama3",
   "version": "0.1.0",
+  "engines": {
+    "node": "18.19.0"
+  },
   "scripts": {
     "format": "prettier --ignore-unknown --cache --check .",
     "format:write": "prettier --ignore-unknown --write .",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
-    "generate": "ts-node app/api/chat/engine/generate.ts"
+    "lint": "next lint"
   },
   "dependencies": {
     "@radix-ui/react-hover-card": "^1.0.7",
