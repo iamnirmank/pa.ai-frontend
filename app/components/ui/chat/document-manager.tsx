@@ -16,7 +16,7 @@ const DocumentManager: React.FC = () => {
   const [documents, setDocuments] = useState<Document[]>([]);
   const [newTitle, setNewTitle] = useState('');
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [fileOrUrl, setFileOrUrl] = useState<'file' | 'url'>('file'); 
+  const [fileOrUrl, setFileOrUrl] = useState<'file' | 'url'>('file');
   const [url, setUrl] = useState('');
   const [editingDocument, setEditingDocument] = useState<Document | null>(null);
   const [editedTitle, setEditedTitle] = useState('');
@@ -50,7 +50,6 @@ const DocumentManager: React.FC = () => {
 
     const formData = new FormData();
     formData.append('title', newTitle);
-    formData.append('link', fileOrUrl);
 
     if (fileOrUrl === 'file' && selectedFile) {
       formData.append('file', selectedFile);
@@ -67,6 +66,14 @@ const DocumentManager: React.FC = () => {
         setFileOrUrl('file');
         setIsUploading(false);
         setLoading(!loading);
+
+        // Clear file input after successful submission
+        if (fileOrUrl === 'file') {
+          const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
+          if (fileInput) {
+            fileInput.value = '';
+          }
+        }
       })
       .catch(error => {
         setUploadError("Error uploading document.");
@@ -174,6 +181,7 @@ const DocumentManager: React.FC = () => {
         </div>
         {fileOrUrl === 'file' ? (
           <input
+            key={selectedFile ? selectedFile.name : 'file-input'}
             type="file"
             onChange={handleFileChange}
             className="border border-gray-300 rounded-lg"
@@ -243,37 +251,36 @@ const DocumentManager: React.FC = () => {
                 <button
                   type="button"
                   onClick={handleCancelEdit}
-                  className="bg-red-500 text-white p-1 rounded-lg ml-2 flex items-center"
+                  className="bg-gray-300 text-gray-700 p-1 rounded-lg ml-2"
                 >
                   <FaTimes />
                 </button>
-                {editError && <p className="text-red-500 ml-2">{editError}</p>}
+                {editError && <p className="text-red-500">{editError}</p>}
               </form>
             ) : (
               <>
-                <div>
-                  <h3 className="text-lg font-semibold text-[#1877F2]">{doc.title}</h3>
-                  <p className="text-sm text-gray-600">Uploaded at: {new Date(doc.uploaded_at).toLocaleString()}</p>
-                  {doc.link ? (
-                    <p className="text-sm text-gray-600">Link: <a href={doc.link} target="_blank" rel="noopener noreferrer" className="text-[#1877F2] hover:underline">{doc.link}</a></p>
+                <span className="flex-1">{doc.title}</span>
+                <span className="flex-1">
+                  {doc.file ? (
+                    <a href={doc.file} target="_blank" rel="noopener noreferrer" className="text-[#1877F2] hover:underline">View</a>
+                  ) : doc.link ? (
+                    <a href={doc.link} target="_blank" rel="noopener noreferrer" className="text-[#1877F2] hover:underline">Visit</a>
                   ) : (
-                    <p className="text-sm text-gray-600">File: <a href={doc.file} target="_blank" rel="noopener noreferrer" className="text-[#1877F2] hover:underline">{doc.file}</a></p>
+                    'No file or link'
                   )}
-                </div>
-                <div className="flex items-center">
-                  <button
-                    onClick={() => handleEditClick(doc)}
-                    className="bg-[#1877F2] text-white p-2 rounded-lg mr-2 flex items-center"
-                  >
-                    <FaEdit />
-                  </button>
-                  <button
-                    onClick={() => handleDelete(doc.id)}
-                    className="bg-red-500 text-white p-2 rounded-lg flex items-center"
-                  >
-                    <FaTrash />
-                  </button>
-                </div>
+                </span>
+                <button
+                  onClick={() => handleEditClick(doc)}
+                  className="bg-[#1877F2] text-white p-1 rounded-lg mr-2"
+                >
+                  <FaEdit />
+                </button>
+                <button
+                  onClick={() => handleDelete(doc.id)}
+                  className="bg-red-500 text-white p-1 rounded-lg"
+                >
+                  <FaTrash />
+                </button>
               </>
             )}
           </div>
